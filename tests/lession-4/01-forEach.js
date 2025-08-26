@@ -1,40 +1,31 @@
-//1.In lần lượt từng phần tử của numbers.
 const numbers = [1, 2 , 3];
-numbers.forEach((Val) => {
-    console.log(`${Val}`)
-})
-console.log('------------------')
-//2. 
-sum = 0
-numbers.forEach((val)=> {
-    sum += val;
-})
-console.log(`Tổng giá trị: ${sum}`);
 
-//Cách 1: 
-sort = numbers.sort();
-console.log(`Gía trị nhỏ nhất: ${sort[0]}`);
-console.log(`Gía trị lớn nhất: ${sort[sort.length-1]}`);
-
-//Cách 2: 
+// 1.1 In lần lượt từng phần tử của numbers.
+numbers.forEach((num) => {
+    console.log(num);
+})
+console.log('---------------------------');
+// 1.2 Tính tổng, tìm giá trị lớn nhất và nhỏ nhất của numbers
+total = 0;
 min = numbers[0];
 max = numbers[0];
-numbers.forEach((val) => {
-    if (val < min) {
-        min = val
+numbers.forEach((num) => {
+    total += num;
+    if (num < min) {
+        min = num; 
     } 
-    if (val > max) {
-        max = val
+    if (num > max) {
+        max = num;
     }
 })
-console.log(`${min}`);
-console.log(`${max}`);
-console.log('------------------')
+console.log(total);
+console.log(min);
+console.log(max);
+console.log('---------------------------');
 
-//3. 
-
-const dup = [];
-numbers.forEach((val) => {
-    dup.push(val * 2);
-})
-console.log(dup);
+// 1.3 Tạo mảng mới từ numbers, mỗi phần tử nhân đôi
+let a = [];
+numbers.forEach((num) => 
+    a.push(num*2)
+)
+console.log(a);

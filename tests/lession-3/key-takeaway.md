@@ -1,7 +1,7 @@
 # GIT
 1. Thay đổi commit message, *sử dụng sau ghi **git commit -m "message"**, muốn thay đổi message*
-    Cách 1: **git commit --amend -m "message"**
-    Cách 2: **git commit --amend**
+    Cách 1: **git commit --amend -m "message"**: thay đổi message của commit gần nhất trực tiếp mà không cần vào giao diện
+    Cách 2: **git commit --amend**:  vào giao diện thay đổi message của commit gần nhất.
         + Gõ **i** -> vào chế độ insert
         + Gõ **esc** để thoát insert
         + Gõ **:wq** -> write and quit
@@ -49,6 +49,14 @@
             Trong đó:
                 - <thuoc_tinh>: giống quy tắc đặt tên biến
                 - <gia tri>: có kiểu giống biến, hoặc là 1 object khác.
+
+    VD: 
+    const car = {
+    make: "Toyota",
+    model: 'Corolla',
+    year: 2021,
+    }
+    console.log(car.year);
 
 4. Function
     function <nameFunction>(){
