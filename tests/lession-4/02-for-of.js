@@ -7,13 +7,13 @@ const dupArr = [1, 2, 3, 1, 2, 4, 5];
 // 2.1 In lần lượt từng ký tự của str
 for (let index of str) {
     console.log(index);
-    }
+}
 console.log('------------------')
 
 // 2.2 Tạo mảng đảo ngược từ str
 let a = '';
 for (let b of str) {
-    a = b+a;
+    a = b + a;
 }
 console.log(a);
 console.log('------------------')
@@ -21,7 +21,7 @@ console.log('------------------')
 // 2.3 Tìm và in vị trí đầu tiên và cuối cùng của giá trị 3 trong arr
 a = 0;
 for (let b of arr) {
-    if (b===3) {
+    if (b === 3) {
         console.log(a);
     }
     a++;

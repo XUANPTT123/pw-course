@@ -1,4 +1,4 @@
-const numbers = [1, 2 , 3];
+const numbers = [1, 2, 3];
 
 // 1.1 In lần lượt từng phần tử của numbers.
 numbers.forEach((num) => {
@@ -12,8 +12,8 @@ max = numbers[0];
 numbers.forEach((num) => {
     total += num;
     if (num < min) {
-        min = num; 
-    } 
+        min = num;
+    }
     if (num > max) {
         max = num;
     }
@@ -25,7 +25,7 @@ console.log('---------------------------');
 
 // 1.3 Tạo mảng mới từ numbers, mỗi phần tử nhân đôi
 let a = [];
-numbers.forEach((num) => 
-    a.push(num*2)
+numbers.forEach((num) =>
+    a.push(num * 2)
 )
 console.log(a);
