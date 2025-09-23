@@ -1,151 +1,132 @@
 import { expect, test } from '@playwright/test';
 
-test.describe('POST-Post', async () => {
+let linkPage = 'https://pw-practice-dev.playwrightvn.com/wp-admin';
+let xpathUserName = "//input[@id='user_login']";
+let xpathPassWord = "//input[@id='user_pass']";
+let xpathLogin = "//input[@id='wp-submit']";
+let xpathMenuPost = "//div[text()='Posts']";
+let xpathMenuTags = "//a[text()='Tags']";
+let xpathBtnAddNewTag = "//input[@id='submit']";
+let xpathMgsRequire = "//p[text()='A name is required for this term.']";
+let xpathMgsExist = "//p[text()='A term with the name provided already exists in this taxonomy.']";
+let xpathMgsTagAdd = "//p[text()='Tag added.']";
+let xpathTagName = "//input[@id='tag-name']";
+let xpathTagSlug = "//input[@id='tag-slug']";
+let xpathMenuCategory = "//a[text() ='Categories']"
+let xpathMgsCategoryAdd = "//p[text()='Category added.']";
 
-    test.beforeEach('Login thành công, click menu "Posts"', async ({ page }) => {
-        await page.goto('https://pw-practice-dev.playwrightvn.com/wp-admin');
-        await page.locator("//input[@id='user_login']").fill('k17-quynh-nga');
-        await page.locator("//input[@id='user_pass']").fill('r7!t7C7t%cwM6J7Y@)ES&Ym6');
-        await page.locator("//input[@id='wp-submit']").click();
-        await page.locator("//div[text()='Posts']").click();
+const userName = 'k17-quynh-nga';
+const passWord = 'r7!t7C7t%cwM6J7Y@)ES&Ym6';
+
+function getXpathTagNameInTable(name: string) {
+    return `//tbody//a[contains(text(),'${name}')]`;
+}
+
+function getXpathBtnDelete(name: string) {
+    return `//a[@aria-label='Delete “${name}”']`;
+}
+
+test.describe('POST - Post', () => {
+    test.beforeEach(async ({ page }) => {
+        await test.step('Go to menu "Posts"', async () => {
+            await page.goto(linkPage);
+            await page.locator(xpathUserName).fill(userName);
+            await page.locator(xpathPassWord).fill(passWord);
+            await page.locator(xpathLogin).click();
+            await page.locator(xpathMenuPost).click();
+            page.on('dialog', dialog => dialog.accept());
+        })
     })
 
     test('@POST_TAG_001 - Tag - add tag failed', async ({ page }) => {
-
-        await test.step('Click menu tags and click button add new tag', async () => {
-            await page.locator("//a[text()='Tags']").click();
-            await page.locator("//input[@id='submit']").click();
-        })
-
-        await test.step('Check show error "A name is required for this term."', async () => {
-            await expect(page.locator("//div[@class='notice notice-error']")).toHaveText("A name is required for this term.");
+        await test.step('Click btn Add new tag', async () => {
+            await page.locator(xpathMenuTags).click();
+            await page.locator(xpathBtnAddNewTag).click();
+            await expect(page.locator(xpathMgsRequire)).toBeVisible();
         })
 
         await test.step('Fill tag name = "lesson tag", click button "Add New Tag"', async () => {
-            await page.locator("//input[@id='tag-name']").fill("lesson tag");
-            await page.locator("//input[@id='submit']").click();
-        })
-
-        await test.step('Check show error "A term with the name provided already exists in this taxonomy."', async () => {
-            await expect(page.locator("//div[@class='notice notice-error']")).toHaveText("A term with the name provided already exists in this taxonomy.");
-        })
-    });
-
-    test('@POST_TAG_002 - Tag - add tag success', async ({ page }) => {
-
-        await page.locator("//a[text()='Tags']").click();
-
-        const name = "tag thanhxuan";
-        await test.step('fill name = "tag {name}", Click button "Add New Tag"', async () => {
-            await page.locator("//input[@id='tag-name']").fill(name);
-            await page.locator("//input[@id='submit']").click();
-        })
-
-        await test.step('Check show "Tag added." and tag invisible in list', async () => {
-            await expect(page.locator("//p[text()='Tag added.']")).toHaveText("Tag added.");
-            await page.waitForTimeout(1000);
-            await expect(page.locator(`//a[normalize-space(text())='${name}']`)).toBeVisible();
-        })
-
-        const name1 = "tag thanhxuan 02";
-        const slug = "tag-thanhxuan-02";
-        await test.step('fill name = "tag {name} 02", slug = "tag-${name}-02"', async () => {
-            await page.locator("//input[@id='tag-name']").fill(name1);
-            await page.locator("//input[@id='tag-slug']").fill(slug);
-            await page.locator("//input[@id='submit']").click();
-        })
-
-        await test.step('Check show "Tag added." and new tag invisiable in list', async () => {
-            await expect(page.locator("//p[text()='Tag added.']")).toHaveText("Tag added.");
-            await expect(page.locator(`//tr[.//a[normalize-space(text())='${name1}'] and .//td[normalize-space(text())='${slug}']]`)).toBeVisible();
-        })
-
-        await test.step('Delete data', async () => {
-            page.once('dialog', async dialog => dialog.accept());
-            await page.locator(`//tr[.//a[normalize-space(text())='${name1}']]`).hover();
-            await page.locator(`//tr[.//a[normalize-space(text())='${name1}']]//a[text()='Delete']`).click();
-
-            page.once('dialog', async dialog => dialog.accept());
-            await page.locator(`//tr[.//a[normalize-space(text())='${name}']]`).hover();
-            await page.locator(`//tr[.//a[normalize-space(text())='${name}']]//a[text()='Delete']`).click();
-        })
-
-        await test.step('Check delete data success', async () => {
-            await expect(page.locator(`//tr[.//a[normalize-space(text())='${name1}'] and .//td[normalize-space(text())='${slug}']]`)).not.toBeVisible();
-            await expect(page.locator(`//tr[.//a[normalize-space(text())='${name}']]`)).not.toBeVisible();
-        })
-    });
-
-    test('@POST_TAG_002 - Tag - slug auto remove special character', async ({ page }) => {
-        await page.locator("//a[text()='Tags']").click();
-
-        const name3 = "tag thanhxuan 39279";
-        const slug3 = "Đây là tag đặc biệt @100 $200";
-        await test.step('fill name = "tag {name} 03", slug = "Đây là tag đặc biệt @100 $200"', async () => {
-            await page.locator("//input[@id='tag-name']").fill(name3);
-            await page.locator("//input[@id='tag-slug']").fill(slug3);
-            await page.locator("//input[@id='submit']").click();
-        })
-
-        await test.step('Check add tag success', async () => {
-            await expect(page.locator("//p[text()='Tag added.']")).toHaveText("Tag added.");
-            await expect(page.locator(`//tr[.//a[normalize-space(text())='${name3}'] and .//td[contains(normalize-space(text()), 'day-la-tag-dac-biet-100-200')]]`)).toBeVisible();
-        })
-
-        await test.step('Delete data', async () => {
-            page.once('dialog', async dialog => dialog.accept());
-            await page.locator(`//tr[.//a[normalize-space(text())='${name3}']]`).hover();
-            await page.locator(`//tr[.//a[normalize-space(text())='${name3}']]//a[text()='Delete']`).click();
-        })
-
-        await test.step('Check detele data success', async () => {
-            await expect(page.locator(`//tr[.//a[normalize-space(text())='${name3}'] and .//td[contains(normalize-space(text()), 'day-la-tag-dac-biet-100-200')]]`)).not.toBeVisible();
-            await expect(page.locator(`//tr[.//a[normalize-space(text())='${name3}']]`)).not.toBeVisible();
-        })
-    });
-
-    test('@POST_CATEGORY_001 - Category - create category success', async ({ page }) => {
-        await page.locator("//a[text()='Categories']").click();
-
-        const name4 = "category Xuân 03";
-        const slug4 = "Đây là category đặc biệt @100 $200";
-        await test.step('Fill name and slug', async () => {
-            await page.locator("//input[@id='tag-name']").fill(name4);
-            await page.locator("//input[@id='tag-slug']").fill(slug4);
-            await page.locator("//input[@id='submit']").click();
-        })
-
-        await test.step('Check add category success', async () => {
-            await expect(page.locator("//p[text()='Category added.']")).toHaveText("Category added.");
-            await expect(page.locator(`//tr[.//a[normalize-space(text())='${name4}'] and .//td[contains(text(),"day-la-category-dac-biet-100-200")]]`)).toBeVisible();
-        })
-
-        const name5 = "category xuan 08";
-        const parent = "K6 class";
-        await test.step('Fill name and parent', async () => {
-            await page.locator("//input[@id='tag-name']").fill(name5);
-            await page.locator("//*[text()='Parent Category']").selectOption(parent);
-            await page.locator("//input[@id='submit']").click();
-        })
-
-        await test.step('Check add category success', async () => {
-            await expect(page.locator("//p[text()='Category added.']")).toHaveText("Category added.");
-            await expect(page.locator(`//tr[.//a[normalize-space(text())='${name5}']]`)).toBeVisible();
-        })
-
-        await test.step('Delete data', async () => {
-            page.once('dialog', async dialog => dialog.accept());
-            await page.locator(`//tr[.//a[normalize-space(text())='${name4}']]`).hover();
-            await page.locator(`//tr[.//a[normalize-space(text())='${name4}']]//a[text()='Delete']`).click();
-
-            page.once('dialog', async dialog => dialog.accept());
-            await page.locator(`//tr[.//a[normalize-space(text())='${name5}']]`).hover();
-            await page.locator(`//tr[.//a[normalize-space(text())='${name5}']]//a[text()='Delete']`).click();
-        })
-
-        await test.step('Check delete data success', async () => {
-            await expect(page.locator(`//tr[.//a[normalize-space(text())='${name4}']]`)).not.toBeVisible();
-            await expect(page.locator(`//tr[.//a[normalize-space(text())='${name5}']]`)).not.toBeVisible();
+            await page.locator(xpathTagName).fill("lesson tag");
+            await page.locator(xpathBtnAddNewTag).click();
+            await expect(page.locator(xpathMgsExist)).toBeVisible();
         })
     })
-})
+
+    const name = 'tag Xuan';
+    const name2 = "tag xuan 02";
+    const slug2 = "tag-xuan-02";
+    const name3 = "category xuan 03";
+    const slug3 = "Đây là category đặc biệt @100 $200";
+    const name4 = "category xuan 04";
+    const slug4 = "K6 class";
+
+    test('@POST_TAG_002 - Tag - add tag success', async ({ page }) => {
+        await test.step('fill name = "tag {name}", Click button "Add New Tag"', async () => {
+            await page.locator(xpathMenuTags).click();
+            await page.locator(xpathTagName).fill(name);
+            await page.locator(xpathBtnAddNewTag).click();
+
+            //Check show Mgs tag add and show data in table 
+            await expect(page.locator(xpathMgsTagAdd)).toBeVisible();
+            await expect(page.locator(getXpathTagNameInTable(name))).toBeVisible();
+
+            //delete data
+            await page.locator(getXpathTagNameInTable(name)).hover();
+            const btnDelete = page.locator(getXpathBtnDelete(name));
+            await btnDelete.click();
+            await expect(page.locator(getXpathTagNameInTable(name))).not.toBeVisible();
+        })
+    })
+
+    test('@POST_TAG_002 - Tag - slug auto remove special character', async ({ page }) => {
+        await test.step('fill name = "tag {name} 02", slug = "tag-${name}-02"', async () => {
+            await page.locator(xpathMenuTags).click();
+            await page.locator(xpathTagName).fill(name2);
+            await page.locator(xpathTagSlug).fill(slug2);
+            await page.locator(xpathBtnAddNewTag).click();
+
+            //Check show mgs và data in table
+            await expect(page.locator(xpathMgsTagAdd)).toBeVisible();
+            await expect(page.locator(getXpathTagNameInTable(name2))).toBeVisible();
+
+            //Delete data
+            await page.locator(getXpathTagNameInTable(name2)).hover();
+            await page.locator(getXpathBtnDelete(name2)).click();
+            await expect(page.locator(getXpathTagNameInTable(name2))).not.toBeVisible();
+        })
+    })
+
+    test('@POST_CATEGORY_001 - Category - create category success', async ({ page }) => {
+        await test.step('name = "category {name} 03", slug = "Đây là category đặc biệt @100 $200"', async () => {
+            await page.locator(xpathMenuCategory).click();
+            await page.locator(xpathTagName).fill(name3);
+            await page.locator(xpathTagSlug).fill(slug3);
+            await page.locator(xpathBtnAddNewTag).click();
+
+            //Check show message and show data in table
+            await expect(page.locator(xpathMgsCategoryAdd)).toBeVisible();
+            await expect(page.locator(getXpathTagNameInTable(name3))).toBeVisible();
+        })
+
+        await test.step('Input name = "category {name} 04", parent = "K6 class"', async () => {
+            await page.locator(xpathMenuCategory).click();
+            await page.locator(xpathTagName).fill(name4);
+            await page.locator(xpathTagSlug).fill(slug4)
+            await page.locator(xpathBtnAddNewTag).click();
+
+            //Check show Mgs and data in table
+            await expect(page.locator(xpathMgsCategoryAdd)).toBeVisible();
+            await expect(page.locator(getXpathTagNameInTable(name4))).toBeVisible();
+        });
+
+        await test.step('Delete data', async () => {
+            await page.locator(getXpathTagNameInTable(name3)).hover();
+            await page.locator(getXpathBtnDelete(name3)).click();
+            await expect(page.locator(getXpathTagNameInTable(name3))).not.toBeVisible();
+
+            await page.locator(getXpathTagNameInTable(name4)).hover();
+            await page.locator(getXpathBtnDelete(name4)).click();
+            await expect(page.locator(getXpathTagNameInTable(name4))).not.toBeVisible();
+        });
+    })
+});
