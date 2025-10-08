@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { RegisterPage } from '../01-pom/RegisterPage';
+import { RegisterPage } from '../01-pom/POM-lession-10/RegisterPage';
 
 const userName = "Xuan1";
 const email = "xuan@gmail.com";

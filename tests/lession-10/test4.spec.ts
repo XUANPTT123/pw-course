@@ -1,5 +1,5 @@
 import {expect, test} from '@playwright/test';
-import { PersionalNotes } from '../01-pom/PersionalNotes';
+import { PersionalNotes } from '../01-pom/POM-lession-10/PersionalNotes';
 const keyWord = 'công nghệ';
 
 test ('PersionalNote', async({page}) => {

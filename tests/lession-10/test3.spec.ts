@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { TodoPage } from '../01-pom/TodoPage';
+import { TodoPage } from '../01-pom/POM-lession-10/TodoPage';
 
 test('TodoPage', async ({ page }) => {
     const todoPage = new TodoPage(page);

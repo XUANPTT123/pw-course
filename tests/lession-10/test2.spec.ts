@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { ProductPage } from '../01-pom/ProductPage';
+import { ProductPage } from '../01-pom/POM-lession-10/ProductPage';
 
 const product1 = "Product 1";
 const product2 = "Product 2";
