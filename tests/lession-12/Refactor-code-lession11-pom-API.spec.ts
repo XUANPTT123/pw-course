@@ -4,9 +4,9 @@ import { SignInAPI } from '../01-pom/POM-API-lession-12/sign-in-api.ts';
 import { classCreateArticle } from '../01-pom/POM-API-lession-12/create-article-and-addcmt-api.ts';
 import { classDelete } from '../01-pom/POM-API-lession-12/delete-api.ts';
 
-const email = 'aabbcc202511@gmail.com';
+const email = 'aabbcc202515@gmail.com';
 const passWord = '12345678';
-const userName = 'aabbcc202511';
+const userName = 'aabbcc202515';
 let apiSignUp = SignUpAPI;
 let apiSignIn = SignInAPI;
 let apiAricle = classCreateArticle;
