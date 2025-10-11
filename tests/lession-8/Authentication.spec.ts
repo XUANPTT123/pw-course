@@ -46,7 +46,7 @@ test.describe('AUTH-Authentication', () => {
         })
     })
 
-    test('@AUTH_002-Login fail', async ({ page }) => {
+    test('@AUTH_002-Login pass', async ({ page }) => {
 
         await test.step('Fill username and password invalid', async () => {
             await page.locator(xpathUserName).fill(userName);

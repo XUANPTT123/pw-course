@@ -1,4 +1,4 @@
-import {APIResponse, expect, test} from '@playwright/test';
+import { APIResponse, expect, test } from '@playwright/test';
 import { SignUpAPI } from '../01-pom/POM-API-lession-12/sign-up-api.ts';
 import { SignInAPI } from '../01-pom/POM-API-lession-12/sign-in-api.ts';
 import { classCreateArticle } from '../01-pom/POM-API-lession-12/create-article-and-addcmt-api.ts';
@@ -20,12 +20,12 @@ const body = 'body1';
 const tagList = ['taglist1', 'taglist2'];
 let slug: string = '';
 const comment = 'comment';
-let commentID: string ='';
+let commentID: string = '';
 let arrayCommentID: string[] = [];
 
 
-test.describe('Refactor lession 11 - POM API', async() => {
-    test('Test1: Đăng ký tài khoản', async({request}) => {
+test.describe('Refactor lession 11 - POM API', async () => {
+    test('Test1: Đăng ký tài khoản', async ({ request }) => {
         const apiSignUp = new SignUpAPI(request);
         const res: APIResponse = await apiSignUp.signUp(email, passWord, userName);
 
@@ -41,8 +41,8 @@ test.describe('Refactor lession 11 - POM API', async() => {
         expect(actualUseName).toBe(userName);
     })
 
-    test('Test2: Đăng nhập và tạo article', async({request}) => {
-        await test.step('sign in', async() => {
+    test('Test2: Đăng nhập và tạo article', async ({ request }) => {
+        await test.step('sign in', async () => {
             const apiSignIn = new SignInAPI(request);
             const res: APIResponse = await apiSignIn.signIn(email, passWord);
 
@@ -55,14 +55,14 @@ test.describe('Refactor lession 11 - POM API', async() => {
             const actualUseName = body.user.username;
             expect(actualEmail).toBe(email);
             expect(actualUseName).toBe(userName);
-            
+
             //get token
             token = body.user.token;
         })
 
-        await test.step('Create article', async() => {
+        await test.step('Create article', async () => {
             const apiAricle = new classCreateArticle(request);
-            const res: APIResponse = await apiAricle.createArticle(token, title,description,body, tagList);
+            const res: APIResponse = await apiAricle.createArticle(token, title, description, body, tagList);
 
             //verify statuscode
             const statuscode = res.status();
@@ -81,10 +81,10 @@ test.describe('Refactor lession 11 - POM API', async() => {
         })
     })
 
-    test('Test3: add 5 comment', async({request}) => {
+    test('Test3: add 5 comment', async ({ request }) => {
         const apiAddComment = new classCreateArticle(request);
-        for (let i = 1; i <=5; i++) {
-            const res: APIResponse = await apiAddComment.addComment(token,slug,`${comment}${i}`);
+        for (let i = 1; i <= 5; i++) {
+            const res: APIResponse = await apiAddComment.addComment(token, slug, `${comment}${i}`);
 
             //verify statuscode
             expect(res.status()).toBe(200);
@@ -100,17 +100,17 @@ test.describe('Refactor lession 11 - POM API', async() => {
         }
     })
 
-    test('Test4: Xoa comment 2, 5', async({request}) => {
+    test('Test4: Xoa comment 2, 5', async ({ request }) => {
         const apiDelete = new classDelete(request);
-        for(let i = 1; i <=5; i++) {
-            if ((i===1) || (i ===4 )) {
+        for (let i = 1; i <= 5; i++) {
+            if ((i === 1) || (i === 4)) {
                 const res: APIResponse = await apiDelete.deleteComment(token, slug, arrayCommentID[i]);
                 expect(res.status()).toBe(200);
             }
-        }   
+        }
     })
 
-    test('Test5: Delete article', async({request}) => {
+    test('Test5: Delete article', async ({ request }) => {
         const apiDelete = new classDelete(request);
         const res: APIResponse = await apiDelete.deleteArticle(token, slug);
         expect(res.status()).toBe(204);

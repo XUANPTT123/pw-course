@@ -18,7 +18,7 @@ test.describe('Refactor code lession 10 - POM Manager', () => {
 
     test('RegisterPage', async ({ page }) => {
         const bien1 = new PomManager(page);
-        
+
         await test.step('Login page, click RegisterPage', async () => {
             const materialPage = bien1.getNavigate();
             await materialPage.gotoPageMaterial();
@@ -43,16 +43,16 @@ test.describe('Refactor code lession 10 - POM Manager', () => {
         await test.step('navigate ProductPage', async () => {
             const materialPage = bien2.getNavigate();
             await materialPage.gotoPageMaterial();
-            
+
             const productPage = bien2.getProductPage();
             await productPage.navigateToProductPage(xpathProductPage);
         })
-    
+
         await test.step('Add product item', async () => {
             const addToCard = bien2.getProductPage();
-            await addToCard.AddToCard(product1,2);
-            await addToCard.AddToCard(product2,3);
-            await addToCard.AddToCard(product3,1);
+            await addToCard.AddToCard(product1, 2);
+            await addToCard.AddToCard(product2, 3);
+            await addToCard.AddToCard(product3, 1);
 
             //verify soluong sp tai gio hang dung nhu da them
             await expect(page.locator(`//td[text()='${product1}']/following-sibling::td[2]`)).toBeVisible();
@@ -66,13 +66,13 @@ test.describe('Refactor code lession 10 - POM Manager', () => {
         })
     })
 
-    test('Test3: Todo page', async({page}) => {
+    test('Test3: Todo page', async ({ page }) => {
         const bien3 = new PomManager(page);
 
         await test.step('navigate ToDoPage', async () => {
             const materialPage = bien3.getNavigate();
             await materialPage.gotoPageMaterial();
-            
+
             const productPage = bien3.getTodoPage();
             await productPage.navigateTodoPage(cssTodoPage);
         })
@@ -99,28 +99,28 @@ test.describe('Refactor code lession 10 - POM Manager', () => {
 
     })
 
-    test('Test4: Persional Note', async({page}) => {
+    test('Test4: Persional Note', async ({ page }) => {
         const bien4 = new PomManager(page);
 
-        await test.step('Navigate to Persional Note', async() => {
+        await test.step('Navigate to Persional Note', async () => {
             const materialPage = bien4.getNavigate();
             await materialPage.gotoPageMaterial();
-            
+
             const persionalNote = bien4.getPersionalNote();
             await persionalNote.navigatetoPersionalNotes(xpathpersonalNote);
         })
 
-        await test.step('Add persional notes', async() => {
+        await test.step('Add persional notes', async () => {
             const addPerNote = bien4.getPersionalNote();
             await addPerNote.AddPersionalNotes(xpathpersonalNote);
         })
 
-        await test.step('Search', async() => {
+        await test.step('Search', async () => {
             const searchItem = bien4.getPersionalNote();
             await searchItem.SearchNote(keyWord);
         })
 
-        await test.step('Verify data hiển thị đúng keyword', async() => {
+        await test.step('Verify data hiển thị đúng keyword', async () => {
             const verifyData = bien4.getPersionalNote();
             await verifyData.VerifyDataContainsKeyWord(keyWord);
         })
