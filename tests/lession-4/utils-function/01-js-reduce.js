@@ -8,6 +8,7 @@ const expenses = [50, 100, 150];
 let reduce1 = scores.reduce((total, num) => total + num, 0);
 console.log(reduce1);
 
+
 // 6.2 Tính tích các giá trị trong numbers.
 let reduce2 = numbers.reduce((tich,num) => tich*num, 1);
 console.log(reduce2);
