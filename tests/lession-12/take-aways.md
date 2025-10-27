@@ -1,6 +1,5 @@
 1. POM API
 1.1. File .ts
-
 import { APIRequestContext } from "@playwright/test";
 
 export class tenClass {
